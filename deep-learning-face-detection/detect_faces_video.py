@@ -11,13 +11,14 @@ import cv2
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-p", "--prototxt", required=True,
+ap.add_argument("-p", "--prototxt", required=False, default='deploy.prototxt.txt',
 	help="path to Caffe 'deploy' prototxt file")
-ap.add_argument("-m", "--model", required=True,
+ap.add_argument("-m", "--model", required=False, default='res10_300x300_ssd_iter_140000.caffemodel',
 	help="path to Caffe pre-trained model")
 ap.add_argument("-c", "--confidence", type=float, default=0.5,
 	help="minimum probability to filter weak detections")
 args = vars(ap.parse_args())
+print args
 
 # load our serialized model from disk
 print("[INFO] loading model...")
@@ -34,12 +35,12 @@ while True:
 	# to have a maximum width of 400 pixels
 	frame = vs.read()
 	frame = imutils.resize(frame, width=400)
- 
+
 	# grab the frame dimensions and convert it to a blob
 	(h, w) = frame.shape[:2]
 	blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0,
 		(300, 300), (104.0, 177.0, 123.0))
- 
+
 	# pass the blob through the network and obtain the detections and
 	# predictions
 	net.setInput(blob)
@@ -60,7 +61,7 @@ while True:
 		# object
 		box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
 		(startX, startY, endX, endY) = box.astype("int")
- 
+
 		# draw the bounding box of the face along with the associated
 		# probability
 		text = "{:.2f}%".format(confidence * 100)
@@ -73,7 +74,7 @@ while True:
 	# show the output frame
 	cv2.imshow("Frame", frame)
 	key = cv2.waitKey(1) & 0xFF
- 
+
 	# if the `q` key was pressed, break from the loop
 	if key == ord("q"):
 		break
