@@ -61,6 +61,9 @@ while True:
 		# object
 		box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
 		(startX, startY, endX, endY) = box.astype("int")
+		face_wid = endX - startX
+		face_high = endY - startY
+		print "face_size:", face_wid*face_high
 
 		# draw the bounding box of the face along with the associated
 		# probability
