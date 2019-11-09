@@ -1,3 +1,0 @@
-# opencv
-
-OpenCV & DL Program
